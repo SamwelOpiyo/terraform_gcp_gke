@@ -95,7 +95,9 @@ The following outputs are given:
 
 Call the module in your terraform script as follows:
 
-## Create Variables block. (Just a sample, you can create it with all module variables. This illustration only uses the compulsory variables.)
+## Create Variables block.
+
+Just a sample, you can add more variables while referring to [Module Environment Variables/Terraform Variables](#module-environment-variablesterraform-variables) above for guidance. This illustration only uses the compulsory variables.
 
 ```
 variable "region" {
@@ -133,7 +135,9 @@ variable "gke_master_password" {
 }
 ```
 
-## Calling the module while setting variables using those defined in above block. (Remember to set the ref appropriately considering release features.)
+## Calling the module while setting variables using those defined in above block.
+
+Remember to set the ref appropriately while referring to releases and their features.
 
 ```
 module "terraform_gcp_gke" {
@@ -167,7 +171,7 @@ module "terraform_gcp_gke" {
 
 ## Getting the outputs.
 
-Sample outputs. You can include all outputs you require while referring to Module Outputs above for guidance.
+Sample outputs. You can include all outputs you require while referring to [Module Outputs](#module-outputs) above for guidance.
 
 ```
 output "terraform_gcp_gke_project_name" {
