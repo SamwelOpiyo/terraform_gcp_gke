@@ -1,12 +1,12 @@
 variable "region" {
-  type    = "string"
-  default = "europe-west1"
+  type        = "string"
+  default     = "europe-west1"
   description = "GCP Project Region."
 }
 
 variable "zone" {
-  type    = "string"
-  default = "europe-west1-b"
+  type        = "string"
+  default     = "europe-west1-b"
   description = "GCP Project Zone."
 }
 
@@ -30,24 +30,25 @@ variable "service_account_iam_roles" {
     "roles/logging.logWriter",
     "roles/monitoring.metricWriter",
   ]
+
   description = "Permissions for Cluster Service Account."
 }
 
 variable "kubernetes_logging_service" {
-  type    = "string"
-  default = "logging.googleapis.com/kubernetes"
+  type        = "string"
+  default     = "logging.googleapis.com/kubernetes"
   description = "Logging service to use."
 }
 
 variable "kubernetes_monitoring_service" {
-  type    = "string"
-  default = "monitoring.googleapis.com/kubernetes"
+  type        = "string"
+  default     = "monitoring.googleapis.com/kubernetes"
   description = "Monitoring service to use."
 }
 
 variable "cluster_name" {
   type        = "string"
-  description = "Desired name of GKE cluster"
+  description = "Desired name of GKE cluster."
 }
 
 variable "cluster_zone" {
