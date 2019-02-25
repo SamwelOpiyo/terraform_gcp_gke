@@ -91,11 +91,6 @@ output "google_container_cluster_cluster_ca_certificate" {
   description = "Base64 encoded public certificate that is the root of trust for the cluster."
 }
 
-output "google_container_cluster_additional_zones" {
-  value       = "${google_container_cluster.cluster.additional_zones}"
-  description = "The list of additional Google Compute Engine locations in which the cluster's nodes are located. If additional zones are configured, the number of nodes specified in initial_node_count has been created in each of the specified zones."
-}
-
 output "google_container_cluster_cluster_ipv4_cidr" {
   value       = "${google_container_cluster.cluster.cluster_ipv4_cidr}"
   description = "The IP address range of the kubernetes pods in the cluster."
@@ -126,11 +121,6 @@ output "google_container_cluster_initial_node_count" {
   description = "The number of nodes created in this cluster's default node pool (not including the Kubernetes master)."
 }
 
-output "google_container_cluster_ip_allocation_policy" {
-  value       = "${google_container_cluster.cluster.ip_allocation_policy}"
-  description = "Configuration for cluster IP allocation."
-}
-
 output "google_container_cluster_logging_service" {
   value       = "${google_container_cluster.cluster.logging_service}"
   description = "The logging service that the cluster writes logs to."
@@ -141,19 +131,9 @@ output "google_container_cluster_monitoring_service" {
   description = "The monitoring service that the cluster writes metrics to. Automatically send metrics from pods in the cluster to the Google Cloud Monitoring API. VM metrics will be collected by Google Compute Engine regardless of this setting."
 }
 
-output "google_container_cluster_maintenance_policy" {
-  value       = "${google_container_cluster.cluster.maintenance_policy}"
-  description = "The maintenance policy for the cluster."
-}
-
 output "google_container_cluster_master_auth" {
   value       = "${google_container_cluster.cluster.master_auth}"
   description = "The authentication information for accessing the Kubernetes master."
-}
-
-output "google_container_cluster_master_authorized_networks_config" {
-  value       = "${google_container_cluster.cluster.master_authorized_networks_config}"
-  description = "The desired configuration options for master authorized networks."
 }
 
 output "google_container_cluster_min_master_version" {
@@ -201,16 +181,6 @@ output "google_container_cluster_project" {
   description = "The ID of the project in which the resource belongs."
 }
 
-output "google_container_cluster_resource_labels" {
-  value       = "${google_container_cluster.cluster.resource_labels}"
-  description = "GCE resource labels (a map of key/value pairs) applied to the cluster."
-}
-
-output "google_container_cluster_subnetwork" {
-  value       = "${google_container_cluster.cluster.subnetwork}"
-  description = "The name or self_link of the Google Compute Engine subnetwork in which the cluster's instances have been launched."
-}
-
 output "google_container_cluster_addons_config" {
   value       = "${google_container_cluster.cluster.addons_config}"
   description = "The configurations for addons supported by GKE."
@@ -221,10 +191,6 @@ output "google_container_cluster_instance_group_urls" {
   description = "List of instance group URLs which have been assigned to the cluster."
 }
 
-output "google_container_cluster_tpu_ipv4_cidr_block" {
-  value       = "${google_container_cluster.cluster.subnetwork}"
-  description = "The IP address range of the Cloud TPUs in this cluster, in CIDR notation (e.g. 1.2.3.4/29)."
-}
 
 # In Beta
 
@@ -257,4 +223,3 @@ output "google_container_cluster_tpu_ipv4_cidr_block" {
 # value       = "${google_container_cluster.cluster.istio_config}"
 # description = "The configurations for istio."
 # }
-

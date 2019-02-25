@@ -60,7 +60,6 @@ The following outputs are given:
 | google_container_cluster_name | The name of the cluster, unique within the project and zone. |
 | google_container_cluster_zone | The zone that the master and the number of nodes specified in initial_node_count has been created in. |
 | google_container_cluster_description | Description of the cluster. |
-| google_container_cluster_additional_zones | The list of additional Google Compute Engine locations in which the cluster's nodes are located. If additional zones are configured, the number of nodes specified in initial_node_count has been created in each of the specified zones. |
 | google_container_cluster_cluster_endpoint | Endpoint for accessing the master node. |
 | google_container_cluster_client_certificate | Base64 encoded public certificate used by clients to authenticate to the cluster endpoint. |
 | google_container_cluster_client_key | Base64 encoded private key used by clients to authenticate to the cluster endpoint. |
@@ -70,12 +69,9 @@ The following outputs are given:
 | google_container_cluster_enable_kubernetes_alpha | Enable Kubernetes Alpha setting. If enabled, the cluster cannot be upgraded and will be automatically deleted after 30 days. |
 | google_container_cluster_enable_legacy_abac | Whether the ABAC authorizer is enabled for this cluster. When enabled, identities in the system, including service accounts, nodes, and controllers, will have statically granted permissions beyond those provided by the RBAC configuration or IAM. |
 | google_container_cluster_initial_node_count | The number of nodes created in this cluster's default node pool (not including the Kubernetes master). |
-| google_container_cluster_ip_allocation_policy | Configuration for cluster IP allocation. |
 | google_container_cluster_logging_service | The logging service that the cluster writes logs to. |
 | google_container_cluster_monitoring_service | The monitoring service that the cluster writes metrics to. Automatically send metrics from pods in the cluster to the Google Cloud Monitoring API. VM metrics will be collected by Google Compute Engine regardless of this setting. |
-| google_container_cluster_maintenance_policy | The maintenance policy for the cluster. |
 | google_container_cluster_master_auth | The authentication information for accessing the Kubernetes master. |
-| google_container_cluster_master_authorized_networks_config | The desired configuration options for master authorized networks |
 | google_container_cluster_min_master_version | The minimum version of the master. GKE will auto-update the master to new versions. |
 | google_container_cluster_master_version | The version of the master. |
 | google_container_cluster_network | The name or self_link of the Google Compute Engine network to which the cluster is connected. |
@@ -85,11 +81,8 @@ The following outputs are given:
 | google_container_cluster_node_version | The Kubernetes version on the nodes. |
 | google_container_cluster_private_cluster_config | Configurations for private cluster. |
 | google_container_cluster_project | The ID of the project in which the resource belongs. |
-| google_container_cluster_resource_labels | GCE resource labels (a map of key/value pairs) applied to the cluster. |
-| google_container_cluster_subnetwork | The name or self_link of the Google Compute Engine subnetwork in which the cluster's instances have been launched. |
 | google_container_cluster_addons_config | The configurations for addons supported by GKE. |
 | google_container_cluster_instance_group_urls | List of instance group URLs which have been assigned to the cluster. |
-| google_container_cluster_tpu_ipv4_cidr_block | The IP address range of the Cloud TPUs in this cluster, in CIDR notation (e.g. 1.2.3.4/29). |
 
 # Using the module in your project.
 
