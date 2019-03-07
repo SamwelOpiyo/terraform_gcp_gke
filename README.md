@@ -79,7 +79,6 @@ The following outputs are given:
 | google_container_cluster_node_config | Configuration options for the nodes. |
 | google_container_cluster_node_pool | List of node pools associated with this cluster. Warning: node pools defined inside a cluster can't be changed (or added/removed) after cluster creation without deleting and recreating the entire cluster. Use the google_container_node_pool resource instead of this property during creation. |
 | google_container_cluster_node_version | The Kubernetes version on the nodes. |
-| google_container_cluster_private_cluster_config | Configurations for private cluster. |
 | google_container_cluster_project | The ID of the project in which the resource belongs. |
 | google_container_cluster_addons_config | The configurations for addons supported by GKE. |
 | google_container_cluster_instance_group_urls | List of instance group URLs which have been assigned to the cluster. |

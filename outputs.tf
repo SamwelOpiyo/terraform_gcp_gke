@@ -171,11 +171,6 @@ output "google_container_cluster_node_version" {
   description = "The Kubernetes version on the nodes."
 }
 
-output "google_container_cluster_private_cluster_config" {
-  value       = "${google_container_cluster.cluster.private_cluster_config}"
-  description = "Configurations for private cluster."
-}
-
 output "google_container_cluster_project" {
   value       = "${google_container_cluster.cluster.project}"
   description = "The ID of the project in which the resource belongs."
