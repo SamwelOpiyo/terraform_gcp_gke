@@ -25,9 +25,9 @@ The following variables must be set:
 | service_account_iam_roles | `["roles/logging.logWriter", "roles/monitoring.metricWriter", "roles/viewer"]` | Permissions for Cluster Service Account. |
 | kubernetes_logging_service | `logging.googleapis.com/kubernetes` | Logging service to use. |
 | kubernetes_monitoring_service | `monitoring.googleapis.com/kubernetes` | Monitoring service to use. |
-| cluster_zone | europe-west1-b | Region to launch servers. |
+| cluster_location | europe-west1 | GCP location to launch servers. If you specify a zone (such as us-central1-a), the cluster will be a zonal cluster with a single cluster master. If you specify a region (such as us-west1), the cluster will be a regional cluster with multiple masters spread across zones in the region, and with default node locations in those zones as well. |
 | cluster_description | GKE Kubernetes Cluster created by terraform. | Description of the cluster. |
-| additional_cluster_zone | [] | Other zones in the same region to launch servers. |
+| node_locations | [] | Other locations to launch servers. These must be in the same region as the cluster zone for zonal clusters, or in the region of a regional cluster. In a multi-zonal cluster, the number of nodes specified in initial_node_count is created in all specified zones as well as the primary zone. If specified for a regional cluster, nodes will only be created in these zones. |
 | min_master_version | latest | GKE master version. |
 | node_version | latest | GKE node version. |
 | cluster_initial_node_count | 3 | Number of nodes in each GKE cluster zone. |
@@ -58,7 +58,7 @@ The following outputs are given:
 | google_service_account_cluster_service_account_key_valid_after | The key can be used after this timestamp. A timestamp in RFC3339 UTC `Zulu` format, accurate to nanoseconds. Example: `2014-10-02T15:01:23.045123456Z`. |
 | google_service_account_cluster_service_account_key_valid_before | The key can be used before this timestamp. A timestamp in RFC3339 UTC `Zulu` format, accurate to nanoseconds. Example: `2014-10-02T15:01:23.045123456Z`. |
 | google_container_cluster_name | The name of the cluster, unique within the project and zone. |
-| google_container_cluster_zone | The zone that the master and the number of nodes specified in initial_node_count has been created in. |
+| google_container_cluster_location | The zone that the master and the number of nodes specified in initial_node_count has been created in. |
 | google_container_cluster_description | Description of the cluster. |
 | google_container_cluster_cluster_endpoint | Endpoint for accessing the master node. |
 | google_container_cluster_client_certificate | Base64 encoded public certificate used by clients to authenticate to the cluster endpoint. |
@@ -144,8 +144,8 @@ module "terraform_gcp_gke" {
   client_email        = "${var.client_email}"
 
   # cluster_description           = "${var.cluster_description}"
-  # cluster_zone                  = "${var.cluster_zone}"
-  # additional_cluster_zone       = "${var.additional_cluster_zone}"
+  # cluster_location              = "${var.cluster_location}"
+  # node_locations                = "${var.node_locations}"
   # min_master_version            = "${var.min_master_version}"
   # node_version                  = "${var.node_version}"
   # cluster_initial_node_count    = "${var.cluster_initial_node_count}"

@@ -63,12 +63,12 @@ output "google_service_account_cluster_service_account_key_valid_before" {
 
 output "google_container_cluster_name" {
   value       = "${google_container_cluster.cluster.name}"
-  description = "The name of the cluster, unique within the project and zone."
+  description = "The name of the cluster, unique within the project."
 }
 
-output "google_container_cluster_zone" {
-  value       = "${google_container_cluster.cluster.zone}"
-  description = "The zone that the master and the number of nodes specified in initial_node_count has been created in."
+output "google_container_location" {
+  value       = "${google_container_cluster.cluster.location}"
+  description = "The location that the master and the number of nodes specified in initial_node_count has been created in."
 }
 
 output "google_container_cluster_cluster_endpoint" {

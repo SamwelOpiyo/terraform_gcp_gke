@@ -8,7 +8,7 @@ provider "google" {
 
 data "google_container_engine_versions" "versions" {
   project = "${var.project_id}"
-  zone    = "${var.zone}"
+  region  = "${var.cluster_location}"
 }
 
 resource "google_service_account" "cluster-service-account" {
@@ -33,9 +33,9 @@ resource "google_project_iam_member" "service-account-cluster-service-account" {
 }
 
 resource "google_container_cluster" "cluster" {
-  project = "${var.project_id}"
-  name    = "${var.cluster_name}"
-  zone    = "${var.cluster_zone}"
+  project  = "${var.project_id}"
+  name     = "${var.cluster_name}"
+  location = "${var.cluster_location}"
 
   description = "${var.cluster_description}"
 
@@ -45,7 +45,7 @@ resource "google_container_cluster" "cluster" {
 
   node_version = "${var.node_version == "latest" ? data.google_container_engine_versions.versions.latest_node_version : var.node_version}"
 
-  additional_zones = "${var.additional_cluster_zone}"
+  node_locations = "${var.node_locations}"
 
   master_auth {
     username = "${var.gke_master_user}"
@@ -69,7 +69,7 @@ resource "google_container_cluster" "cluster" {
       "https://www.googleapis.com/auth/devstorage.read_only",
     ]
 
-    labels {
+    labels = {
       generator = "terraform"
       env       = "${var.gke_label_env}"
     }
@@ -96,7 +96,7 @@ provider "kubernetes" {
 }
 
 resource "null_resource" "apply" {
-  triggers {
+  triggers = {
     host                   = "${md5(google_container_cluster.cluster.endpoint)}"
     username               = "${md5(google_container_cluster.cluster.master_auth.0.username)}"
     password               = "${md5(google_container_cluster.cluster.master_auth.0.password)}"
@@ -107,8 +107,8 @@ resource "null_resource" "apply" {
 
   provisioner "local-exec" {
     command = <<EOF
-      gcloud container clusters get-credentials "${google_container_cluster.cluster.name}" --zone="${google_container_cluster.cluster.zone}" --project="${var.project_id}"
-      CONTEXT="gke_"${var.project_id}"_${google_container_cluster.cluster.zone}_${google_container_cluster.cluster.name}" kubectl create clusterrolebinding myname-cluster-admin-binding --clusterrole=cluster-admin --user="${var.client_email}"
+      gcloud container clusters get-credentials "${google_container_cluster.cluster.name}" --zone="${google_container_cluster.cluster.location}" --project="${var.project_id}"
+      CONTEXT="gke_"${var.project_id}"_${google_container_cluster.cluster.location}_${google_container_cluster.cluster.name}" kubectl create clusterrolebinding myname-cluster-admin-binding --clusterrole=cluster-admin --user="${var.client_email}"
       EOF
   }
 }
