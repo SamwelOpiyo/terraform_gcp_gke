@@ -1,6 +1,6 @@
 # Directory Description.
 
-This repository contains terraform module used to create a Kubernetes cluster in Google Cloud Platform after provisioning Google Cloud Project.
+This repository contains terraform module used to create a Kubernetes cluster in Google Cloud Platform after provisioning Google Cloud Project(Project Services required are also provisioned using this module).
 
 ## Module Environment Variables/Terraform Variables.
 
@@ -37,6 +37,18 @@ The following variables must be set:
 | gke_node_machine_type | g1-small | Machine type of GKE nodes. |
 | has_preemptible_nodes | true | Enable usage of preemptible nodes. |
 | gke_label_env | dev | Environment label. |
+| is_http_load_balancing_disabled | false | Status of HTTP (L7) load balancing controller addon, which makes it easy to set up HTTP load balancers for services in a cluster. |   
+| is_kubernetes_dashboard_disabled | false | Status of the Kubernetes Dashboard add-on, which controls whether the Kubernetes Dashboard will be enabled for this cluster. |
+| is_horizontal_pod_autoscaling_disabled | false | Status of the Horizontal Pod Autoscaling addon, which increases or decreases the number of replica pods a replication controller has based on the resource usage of the existing pods. It ensures that a Heapster pod is running in the cluster, which is also used by the Cloud Monitoring service. |
+| is_istio_disabled | true | Status of the Istio addon. |                     
+| is_cloudrun_disabled | true | Status of the CloudRun addon. It `requires istio_config enabled`. |                
+| daily_maintenance_start_time | 12:00 | Time window specified for daily maintenance operations. Specify start_time in `RFC3339` format 'HH:MM', where HH : [00-23] and MM : [00-59] GMT. |    
+| is_vertical_pod_autoscaling_enabled | false | Status of Vertical Pod Autoscaling. Vertical Pod Autoscaling automatically adjusts the resources of pods controlled by it. |
+| is_cluster_autoscaling_enabled | false | Is node autoprovisioning enabled. To set this to true, make sure your config meets the rest of the requirements. Notably, you'll need `min_master_version` of `at least 1.11.2`. |    
+| cluster_autoscaling_cpu_max_limit | 10 | Maximum CPU limit for autoscaling if it is enabled. |   
+| cluster_autoscaling_cpu_min_limit | 1 | Minimum CPU limit for autoscaling if it is enabled. |
+| cluster_autoscaling_memory_max_limit | 64 | Maximum memory limit for autoscaling if it is enabled. |
+| cluster_autoscaling_memory_min_limit | 2 | Minimum memory limit for autoscaling if it is enabled. |
 
 ## Module Outputs.
 
@@ -63,6 +75,8 @@ The following outputs are given:
 | google_container_cluster_cluster_endpoint | Endpoint for accessing the master node. |
 | google_container_cluster_client_certificate | Base64 encoded public certificate used by clients to authenticate to the cluster endpoint. |
 | google_container_cluster_client_key | Base64 encoded private key used by clients to authenticate to the cluster endpoint. |
+| google_container_cluster_master_username | Username to authenticate with the k8s master. |
+| google_container_cluster_master_password | Password to authenticate with the k8s master. |
 | google_container_cluster_cluster_ca_certificate | Base64 encoded public certificate that is the root of trust for the cluster. |
 | google_container_cluster_cluster_ipv4_cidr | The IP address range of the kubernetes pods in the cluster. |
 | google_container_cluster_cluster_autoscaling | Configuration for cluster autoscaling (also called autoprovisioning). |
@@ -82,6 +96,7 @@ The following outputs are given:
 | google_container_cluster_project | The ID of the project in which the resource belongs. |
 | google_container_cluster_addons_config | The configurations for addons supported by GKE. |
 | google_container_cluster_instance_group_urls | List of instance group URLs which have been assigned to the cluster. |
+| google_container_cluster_istio_config | The configurations for istio. |
 
 # Using the module in your project.
 
@@ -142,22 +157,6 @@ module "terraform_gcp_gke" {
   cluster_name        = "${var.cluster_name}"
   gke_master_password = "${var.gke_master_password}"
   client_email        = "${var.client_email}"
-
-  # cluster_description           = "${var.cluster_description}"
-  # cluster_location              = "${var.cluster_location}"
-  # node_locations                = "${var.node_locations}"
-  # min_master_version            = "${var.min_master_version}"
-  # node_version                  = "${var.node_version}"
-  # cluster_initial_node_count    = "${var.cluster_initial_node_count}"
-  # node_disk_size_gb             = "${var.node_disk_size_gb}"
-  # node_disk_type                = "${var.node_disk_type}"
-  # gke_master_user               = "${var.gke_master_user}"
-  # gke_node_machine_type         = "${var.gke_node_machine_type}"
-  # has_preemptible_nodes         = "${var.has_preemptible_nodes}"
-  # gke_label_env                 = "${var.gke_label_env}"
-  # service_account_iam_roles     = "${var.service_account_iam_roles}"
-  # kubernetes_logging_service    = "${var.kubernetes_logging_service}"
-  # kubernetes_monitoring_service = "${var.kubernetes_monitoring_service}"
 }
 ```
 

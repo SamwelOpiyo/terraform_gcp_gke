@@ -1,7 +1,22 @@
-provider "google" {
+provider "google-beta" {
   region  = "${var.region}"
   zone    = "${var.zone}"
   project = "${var.project_id}"
+}
+
+locals {
+  resource_limits = "${var.is_cluster_autoscaling_enabled}" == true ? [
+    {
+      resource_type = "cpu"
+      maximum       = "${var.cluster_autoscaling_cpu_max_limit}"
+      minimum       = "${var.cluster_autoscaling_cpu_min_limit}"
+    },
+    {
+      resource_type = "memory"
+      maximum       = "${var.cluster_autoscaling_memory_max_limit}"
+      minimum       = "${var.cluster_autoscaling_memory_min_limit}"
+    },
+  ] : []
 }
 
 # see https://www.terraform.io/docs/providers/google/r/container_cluster.html
@@ -9,12 +24,42 @@ provider "google" {
 data "google_container_engine_versions" "versions" {
   project = "${var.project_id}"
   region  = "${var.cluster_location}"
+
+  depends_on = [
+    "google_project_services.project-services",
+  ]
+}
+
+resource "google_project_services" "project-services" {
+  project            = "${var.project_id}"
+  disable_on_destroy = "false"
+
+  services = [
+    "cloudresourcemanager.googleapis.com",
+    "servicemanagement.googleapis.com",
+    "serviceusage.googleapis.com",
+    "storage-api.googleapis.com",
+    "iam.googleapis.com",
+    "oslogin.googleapis.com",
+    "compute.googleapis.com",
+    "container.googleapis.com",
+    "containerregistry.googleapis.com",
+    "logging.googleapis.com",
+    "monitoring.googleapis.com",
+    "iamcredentials.googleapis.com",
+    "bigquery-json.googleapis.com",
+    "pubsub.googleapis.com",
+  ]
 }
 
 resource "google_service_account" "cluster-service-account" {
   account_id   = "${var.project_name}-cluster-sa"
   display_name = "${var.project_name}-cluster-sa"
   project      = "${var.project_id}"
+
+  depends_on = [
+    "google_project_services.project-services",
+  ]
 }
 
 resource "google_service_account_key" "cluster-service-account-key" {
@@ -33,6 +78,7 @@ resource "google_project_iam_member" "service-account-cluster-service-account" {
 }
 
 resource "google_container_cluster" "cluster" {
+  provider = "google-beta"
   project  = "${var.project_id}"
   name     = "${var.cluster_name}"
   location = "${var.cluster_location}"
@@ -50,6 +96,73 @@ resource "google_container_cluster" "cluster" {
   master_auth {
     username = "${var.gke_master_user}"
     password = "${var.gke_master_password}"
+    client_certificate_config {
+      issue_client_certificate = "${var.issue_client_certificate}"
+    }
+  }
+
+  addons_config {
+    http_load_balancing {
+      disabled = "${var.is_http_load_balancing_disabled}"
+    }
+
+    horizontal_pod_autoscaling {
+      disabled = "${var.is_horizontal_pod_autoscaling_disabled}"
+    }
+
+    kubernetes_dashboard {
+      disabled = "${var.is_kubernetes_dashboard_disabled}"
+    }
+
+    istio_config {
+      disabled = "${var.is_istio_disabled}"
+      auth     = "AUTH_MUTUAL_TLS"
+    }
+
+    cloudrun_config {
+      disabled = "${var.is_cloudrun_disabled}"
+    }
+  }
+
+  vertical_pod_autoscaling {
+    enabled = "${var.is_vertical_pod_autoscaling_enabled}"
+  }
+
+  cluster_autoscaling {
+    enabled = "${var.is_cluster_autoscaling_enabled}"
+
+    dynamic "resource_limits" {
+      for_each = [for resource_limit in local.resource_limits : {
+        resource_type = resource_limit.resource_type
+        maximum       = resource_limit.maximum
+        minimum       = resource_limit.minimum
+      }]
+
+      content {
+        resource_type = resource_limits.value.resource_type
+        maximum       = resource_limits.value.maximum
+        minimum       = resource_limits.value.minimum
+      }
+    }
+
+    # If cluster_autoscaling is enabled, the code above generates
+    # resource_limits {
+      # resource_type = "cpu"
+      # maximum       = "${var.cluster_autoscaling_cpu_max_limit}"
+      # minimum       = "${var.cluster_autoscaling_cpu_min_limit}"
+    # }
+
+    # resource_limits {
+      # resource_type = "memory"
+      # maximum       = "${var.cluster_autoscaling_memory_max_limit}"
+      # minimum       = "${var.cluster_autoscaling_memory_min_limit}"
+    # }
+  }
+
+  maintenance_policy {
+    daily_maintenance_window {
+      start_time = "${var.daily_maintenance_start_time}"
+    }
   }
 
   logging_service    = "${var.kubernetes_logging_service}"
@@ -83,16 +196,6 @@ resource "google_container_cluster" "cluster" {
   depends_on = [
     "google_project_iam_member.service-account-cluster-service-account",
   ]
-}
-
-provider "kubernetes" {
-  host     = "${google_container_cluster.cluster.endpoint}"
-  username = "${google_container_cluster.cluster.master_auth.0.username}"
-  password = "${google_container_cluster.cluster.master_auth.0.password}"
-
-  client_certificate     = "${base64decode(google_container_cluster.cluster.master_auth.0.client_certificate)}"
-  client_key             = "${base64decode(google_container_cluster.cluster.master_auth.0.client_key)}"
-  cluster_ca_certificate = "${base64decode(google_container_cluster.cluster.master_auth.0.cluster_ca_certificate)}"
 }
 
 resource "null_resource" "apply" {

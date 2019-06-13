@@ -82,14 +82,14 @@ variable "node_version" {
 }
 
 variable "cluster_initial_node_count" {
-  type        = "string"
+  type        = number
   default     = 3
   description = "Number of nodes in each GKE cluster location."
 }
 
 variable "node_disk_size_gb" {
-  type        = "string"
-  default     = "100"
+  type        = number
+  default     = 100
   description = "Size of the disk attached to each node, specified in GB. The smallest allowed disk size is 10GB. Defaults to 100GB."
 }
 
@@ -110,6 +110,12 @@ variable "gke_master_password" {
   description = "Password to authenticate with the k8s master"
 }
 
+variable "issue_client_certificate" {
+  type        = bool
+  default     = true
+  description = "Issue client certificate for cluster."
+}
+
 variable "gke_node_machine_type" {
   type        = "string"
   default     = "g1-small"
@@ -117,8 +123,8 @@ variable "gke_node_machine_type" {
 }
 
 variable "has_preemptible_nodes" {
-  type        = "string"
-  default     = "true"
+  type        = bool
+  default     = true
   description = "Enable usage of preemptible nodes."
 }
 
@@ -126,4 +132,76 @@ variable "gke_label_env" {
   type        = "string"
   default     = "dev"
   description = "environment"
+}
+
+variable "is_http_load_balancing_disabled" {
+  type        = bool
+  default     = false
+  description = "Status of HTTP (L7) load balancing controller addon, which makes it easy to set up HTTP load balancers for services in a cluster."
+}
+
+variable "is_kubernetes_dashboard_disabled" {
+  type        = bool
+  default     = false
+  description = "Status of the Kubernetes Dashboard add-on, which controls whether the Kubernetes Dashboard will be enabled for this cluster."
+}
+
+variable "is_horizontal_pod_autoscaling_disabled" {
+  type        = bool
+  default     = false
+  description = "Status of the Horizontal Pod Autoscaling addon, which increases or decreases the number of replica pods a replication controller has based on the resource usage of the existing pods. It ensures that a Heapster pod is running in the cluster, which is also used by the Cloud Monitoring service."
+}
+
+variable "is_istio_disabled" {
+  type        = bool
+  default     = true
+  description = "Status of the Istio addon."
+}
+
+variable "is_cloudrun_disabled" {
+  type        = bool
+  default     = true
+  description = "Status of the CloudRun addon. It requires istio_config enabled."
+}
+
+variable "daily_maintenance_start_time" {
+  type        = "string"
+  default     = "12:00"
+  description = "Time window specified for daily maintenance operations. Specify start_time in RFC3339 format 'HH:MM', where HH : [00-23] and MM : [00-59] GMT."
+}
+
+variable "is_vertical_pod_autoscaling_enabled" {
+  type        = bool
+  default     = false
+  description = "Status of Vertical Pod Autoscaling. Vertical Pod Autoscaling automatically adjusts the resources of pods controlled by it."
+}
+
+variable "is_cluster_autoscaling_enabled" {
+  type        = bool
+  default     = false
+  description = "Is node autoprovisioning enabled. To set this to true, make sure your config meets the rest of the requirements. Notably, you'll need min_master_version of at least 1.11.2."
+}
+
+variable "cluster_autoscaling_cpu_max_limit" {
+  type        = number
+  default     = 10
+  description = "Maximum CPU limit for autoscaling if it is enabled."
+}
+
+variable "cluster_autoscaling_cpu_min_limit" {
+  type        = number
+  default     = 1
+  description = "Minimum CPU limit for autoscaling if it is enabled."
+}
+
+variable "cluster_autoscaling_memory_max_limit" {
+  type        = number
+  default     = 64
+  description = "Maximum memory limit for autoscaling if it is enabled."
+}
+
+variable "cluster_autoscaling_memory_min_limit" {
+  type        = number
+  default     = 2
+  description = "Minimum memory limit for autoscaling if it is enabled."
 }

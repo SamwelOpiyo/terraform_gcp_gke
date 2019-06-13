@@ -49,6 +49,7 @@ output "google_service_account_cluster_service_account_key_public_key" {
 output "google_service_account_cluster_service_account_key_private_key" {
   value       = "${google_service_account_key.cluster-service-account-key.private_key}"
   description = "The private key in JSON format, base64 encoded. This is what you normally get as a file when creating service account keys through the CLI or web console. This is only populated when creating a new key, and when no pgp_key is provided."
+  sensitive   = true
 }
 
 output "google_service_account_cluster_service_account_key_valid_after" {
@@ -74,6 +75,7 @@ output "google_container_location" {
 output "google_container_cluster_cluster_endpoint" {
   value       = "${google_container_cluster.cluster.endpoint}"
   description = "Endpoint for accessing the master node"
+  sensitive   = true
 }
 
 output "google_container_cluster_client_certificate" {
@@ -84,6 +86,19 @@ output "google_container_cluster_client_certificate" {
 output "google_container_cluster_client_key" {
   value       = "${google_container_cluster.cluster.master_auth.0.client_key}"
   description = "Base64 encoded private key used by clients to authenticate to the cluster endpoint."
+  sensitive   = true
+}
+
+output "google_container_cluster_master_username" {
+  value       = "${google_container_cluster.cluster.master_auth[0].username}"
+  description = "Username to authenticate with the k8s master."
+  sensitive   = true
+}
+
+output "google_container_cluster_master_password" {
+  value       = "${google_container_cluster.cluster.master_auth[0].password}"
+  description = "Password to authenticate with the k8s master."
+  sensitive   = true
 }
 
 output "google_container_cluster_cluster_ca_certificate" {
@@ -134,6 +149,7 @@ output "google_container_cluster_monitoring_service" {
 output "google_container_cluster_master_auth" {
   value       = "${google_container_cluster.cluster.master_auth}"
   description = "The authentication information for accessing the Kubernetes master."
+  sensitive   = true
 }
 
 output "google_container_cluster_min_master_version" {
@@ -186,6 +202,11 @@ output "google_container_cluster_instance_group_urls" {
   description = "List of instance group URLs which have been assigned to the cluster."
 }
 
+output "google_container_cluster_istio_config" {
+  value       = "${google_container_cluster.cluster.addons_config[0].istio_config}"
+  description = "The configurations for istio."
+}
+
 
 # In Beta
 
@@ -211,10 +232,4 @@ output "google_container_cluster_instance_group_urls" {
 # output "google_container_cluster_remove_default_node_pool" {
 # value       = "${google_container_cluster.cluster.remove_default_node_pool}"
 # description = "If true, it means the default node pool was deleted upon cluster creation."
-# }
-
-
-# output "google_container_cluster_istio_config" {
-# value       = "${google_container_cluster.cluster.istio_config}"
-# description = "The configurations for istio."
 # }
