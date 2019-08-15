@@ -34,22 +34,7 @@ resource "google_project_services" "project-services" {
   project            = "${var.project_id}"
   disable_on_destroy = "false"
 
-  services = [
-    "cloudresourcemanager.googleapis.com",
-    "servicemanagement.googleapis.com",
-    "serviceusage.googleapis.com",
-    "storage-api.googleapis.com",
-    "iam.googleapis.com",
-    "oslogin.googleapis.com",
-    "compute.googleapis.com",
-    "container.googleapis.com",
-    "containerregistry.googleapis.com",
-    "logging.googleapis.com",
-    "monitoring.googleapis.com",
-    "iamcredentials.googleapis.com",
-    "bigquery-json.googleapis.com",
-    "pubsub.googleapis.com",
-  ]
+  services = "${var.project_services_to_enable}"
 }
 
 resource "google_service_account" "cluster-service-account" {
@@ -174,13 +159,7 @@ resource "google_container_cluster" "cluster" {
 
     service_account = "${google_service_account.cluster-service-account.email}"
 
-    oauth_scopes = [
-      "https://www.googleapis.com/auth/cloud-platform",
-      "https://www.googleapis.com/auth/compute",
-      "https://www.googleapis.com/auth/monitoring",
-      "https://www.googleapis.com/auth/logging.write",
-      "https://www.googleapis.com/auth/devstorage.read_only",
-    ]
+    oauth_scopes = "${var.cluster_oauth_scopes}"
 
     labels = {
       generator = "terraform"

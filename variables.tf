@@ -22,6 +22,29 @@ variable "client_email" {
   type = "string"
 }
 
+variable "project_services_to_enable" {
+  type = "list"
+
+  default = [
+    "cloudresourcemanager.googleapis.com",
+    "servicemanagement.googleapis.com",
+    "serviceusage.googleapis.com",
+    "storage-api.googleapis.com",
+    "iam.googleapis.com",
+    "oslogin.googleapis.com",
+    "compute.googleapis.com",
+    "container.googleapis.com",
+    "containerregistry.googleapis.com",
+    "logging.googleapis.com",
+    "monitoring.googleapis.com",
+    "iamcredentials.googleapis.com",
+    "bigquery-json.googleapis.com",
+    "pubsub.googleapis.com",
+  ]
+
+  description = "Project Services to enable so that provisioning of resources will work through the API."
+}
+
 variable "service_account_iam_roles" {
   type = "list"
 
@@ -61,6 +84,20 @@ variable "cluster_description" {
   type        = "string"
   default     = "GKE Kubernetes Cluster created by terraform."
   description = "Description of the cluster."
+}
+
+variable "cluster_oauth_scopes" {
+  type = "list"
+
+  default = [
+    "https://www.googleapis.com/auth/cloud-platform",
+    "https://www.googleapis.com/auth/compute",
+    "https://www.googleapis.com/auth/monitoring",
+    "https://www.googleapis.com/auth/logging.write",
+    "https://www.googleapis.com/auth/devstorage.read_only",
+  ]
+
+  description = "The set of Google API scopes to be made available on all of the node VMs under the 'default' service account."
 }
 
 variable "node_locations" {

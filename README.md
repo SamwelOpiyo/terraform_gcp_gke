@@ -22,11 +22,13 @@ The following variables must be set:
 |---       |---            |---         |
 | region | europe-west1 | GCP Project Region. |
 | zone | europe-west1-b | GCP Project Zone. |
+| project_services_to_enable | `["cloudresourcemanager.googleapis.com", "servicemanagement.googleapis.com", "serviceusage.googleapis.com", "storage-api.googleapis.com", "iam.googleapis.com", "oslogin.googleapis.com", "compute.googleapis.com", "container.googleapis.com", "containerregistry.googleapis.com", "logging.googleapis.com", "monitoring.googleapis.com", "iamcredentials.googleapis.com", "bigquery-json.googleapis.com", "pubsub.googleapis.com"]` | Project Services to enable so that provisioning of resources will work through the API. |
 | service_account_iam_roles | `["roles/logging.logWriter", "roles/monitoring.metricWriter", "roles/viewer"]` | Permissions for Cluster Service Account. |
 | kubernetes_logging_service | `logging.googleapis.com/kubernetes` | Logging service to use. |
 | kubernetes_monitoring_service | `monitoring.googleapis.com/kubernetes` | Monitoring service to use. |
 | cluster_location | europe-west1 | GCP location to launch servers. If you specify a zone (such as us-central1-a), the cluster will be a zonal cluster with a single cluster master. If you specify a region (such as us-west1), the cluster will be a regional cluster with multiple masters spread across zones in the region, and with default node locations in those zones as well. |
 | cluster_description | GKE Kubernetes Cluster created by terraform. | Description of the cluster. |
+| cluster_oauth_scopes | `["https://www.googleapis.com/auth/cloud-platform", "https://www.googleapis.com/auth/compute", "https://www.googleapis.com/auth/monitoring", "https://www.googleapis.com/auth/logging.write", "https://www.googleapis.com/auth/devstorage.read_only"]` | The set of Google API scopes to be made available on all of the node VMs under the 'default' service account. |
 | node_locations | [] | Other locations to launch servers. These must be in the same region as the cluster zone for zonal clusters, or in the region of a regional cluster. In a multi-zonal cluster, the number of nodes specified in initial_node_count is created in all specified zones as well as the primary zone. If specified for a regional cluster, nodes will only be created in these zones. |
 | min_master_version | latest | GKE master version. |
 | node_version | latest | GKE node version. |
